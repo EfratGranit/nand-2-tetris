@@ -13,11 +13,11 @@ Algorithms, and
 Software engineering.
 It’s a fantastic course and I highly recommend it.
 
-# Repository
+## Repository
 This repository contains my Nand to Tetris project solutions. The course is comprised of two parts, hardware and software. Each part contains six projects that are self-contained in accordance with the abstraction principle.
 
-# Project solutions
-# Part I: The hardware
+## Project solutions
+###Part I: The hardware
 First part is dedicated to the design and implementation of a computer hardware named Hack. The repository contains hardware solutions to the following projects.
 
 Project 01: Boolean Logic
@@ -26,7 +26,7 @@ Project 03: Sequential Logic
 Project 04: Machine Language
 Project 05: Computer Architecture
 Project 06: Assembler
-# Part II: The software
+## Part II: The software
 Second part starts with the virtual machine design, implements a high level object oriented language called Jack, and ends with compiler and the operating system. The repository contains software solutions to the following projects.
 
 Project 07: Virtual Machine, Stack Arithmetic
@@ -35,6 +35,6 @@ Project 09: High-Level Language
 Project 10: Compiler, Syntax Analysis
 Project 11: Compiler, Code Generation
 Project 12: Operating System
-# References
+## References
 The course is based upon The Elements of Computing Systems by Noam Nisan and Shimon Schocken. Also the official course website contains all the project materials and software tools needed.
 
