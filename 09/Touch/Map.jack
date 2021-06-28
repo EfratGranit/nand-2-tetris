@@ -1,0 +1,124 @@
+class Map {
+    field Player player;
+    field List monsters;
+
+    /** New map with spawned Player and a few Creatures */
+    constructor Map new() {
+        let player = Player.new(256, 128);
+        let monsters = List.new(Monster.new(128, 64), null);
+        return this;
+    }
+
+    /** Destroy Game and deallocate memory */
+    method void dispose() {
+        do player.dispose();
+        do monsters.dispose();
+        do Memory.deAlloc(this);
+        return;
+   }
+
+   /** Invoke reaction to a pressed key
+     *
+     *    | phys. key | key code | response | meaning     |
+     *    | --------- | -------- | -------- | ----------- |
+     *    | Up        |   131    |    1     | Move up     |
+     *    | Down      |   133    |    2     | Move down   |
+     *    | Left      |   130    |    3     | Move left   |
+     *    | Right     |   132    |    4     | Move right  |
+     *    | Space     |    32    |    5     | Skip a step |
+     *    | Esc       |   140    |   99     | Go to menu  |
+     *    |      else |    --    |    0     | do nothing  |
+     *
+     *    Other response codes:
+     *        98 - game over
+     */
+    method int pressedKey(int key) {
+        var int response;
+
+        if (key = 140) {               // Esc
+            let response = 99;
+        } else {
+            if (key = 131) {           // Up
+                let response = 1;
+            } else { if (key = 133) {  // Down
+                let response = 2;
+            } else { if (key = 130) {  // Left
+                let response = 3;
+            } else { if (key = 132) {  // Right
+                let response = 4;
+            } else { if (key = 32) {   // Space
+                let response = 5;
+            }}}}}
+            let response = _step(response);
+        }
+        return response;
+    }
+
+   /** Clear the screen and show the objects on the map */
+    method void show() {
+        var List current;
+        var Monster cur_Monster;
+        let current = monsters;
+
+        do Screen.clearScreen();
+        do player.draw(true);
+
+        while (~(current = null)) {
+            let cur_Monster = current.getData();
+            do cur_Monster.draw(true);
+            let current = current.getNext();
+        }
+
+        return;
+    }
+
+    /** Execute one step */
+    method int _step(int response) {
+        var int spawn_x, spawn_y;
+        var boolean valid_spawn;
+        var int response, key;
+        var Monster cur_Monster;
+        var List current;
+        let response = response;
+
+        // Move Player
+        do player.move(response);
+
+        // Move monsters
+        let current = monsters;
+        while (~(current = null)) {
+            let cur_Monster = current.getData();
+            do cur_Monster.move(player.getX(), player.getY());
+            let current = current.getNext();
+            if (player.touchesMonster(cur_Monster)) {
+                do Print.status("Touch! Game over! Press `Enter` to go to a menu.");
+                let current = null;     // Break the loop
+                let response = 98;      // Game over response code
+                while (~(key = 128)) {  // Wait until Enter is pressed
+                    let key = Keyboard.keyPressed();
+                }
+            }
+        }
+
+        // Spawn Monster with 1% chance
+        if (Random.randBool(1)) {
+            let valid_spawn = false;
+            while (~(valid_spawn)) {
+                let spawn_x = Random.randRangeExp(9); // 0..511
+                if ((spawn_x < (511-4)) & (spawn_x > 4)) { // check bounding box (dx = 4)
+                    let valid_spawn = true;
+                }
+            }
+            let valid_spawn = false;
+            while (~(valid_spawn)) {
+                let spawn_y = Random.randRangeExp(8); // 0..255
+                if ((spawn_y < (255-4)) & (spawn_y > 4)) { // check bounding box (dx = 4)
+                    let valid_spawn = true;
+                }
+            }
+            do monsters.push(Monster.new(spawn_x, spawn_y));
+        }
+
+        return response;
+    }
+}

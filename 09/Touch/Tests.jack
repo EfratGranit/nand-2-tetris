@@ -1,0 +1,183 @@
+class Tests {
+    /** failure is 11111 and success is 22222 - this is for easy spotting in RAM */
+    static int testSuccess;
+
+    /** Set default success value (false) */
+    function void init() {
+        let testSuccess = 11111;
+        return;
+    }
+
+    /** Run tests. Writes true to testSuccess if successful, otherwise -1 */
+    function void run() {
+        var boolean exit, success1, success2, success3;
+        var int random_seed, key, pressed_key, num;
+        let exit = false;
+        let random_seed = 123;
+        let success1 = false;
+        let success2 = false;
+
+        do Tests.init();
+
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("The Touch Game - Tests");
+        do Output.println();
+        do Output.printString("1) Test mean of 100 random numbers (goal: 16384 +-500)");
+        do Output.println();
+        do Output.printString("2) Test generating booleans based on percentage");
+        do Output.println();
+        do Output.printString("3) Test range of power of two on 1000 values");
+        do Output.println();
+        do Output.printString("a) Test all");
+        do Output.println();
+        do Output.printString("e) Exit");
+
+        do Print.clearStatus();
+
+        while (~exit) {
+            // Wait until key is pressed
+            while (key = 0){
+                let key = Keyboard.keyPressed();
+                let random_seed = random_seed + 1;
+            }
+
+            let pressed_key = key;
+
+            // Set random seed
+            do Random.setSeed(random_seed);
+
+            // Handle pressed key
+            if (pressed_key = 49) {           // 1
+                let success1 = Tests.testRandom();
+            } else { if (pressed_key = 50) {  // 2
+                while (~(key = 0)){
+                    let key = Keyboard.keyPressed();
+                }
+                do Print.clearStatus();
+                let num = Keyboard.readInt("Target percentage: ");
+                let success2 = Tests.testBool(num);
+            } else { if (pressed_key = 51) {  // 3
+                while (~(key = 0)){
+                    let key = Keyboard.keyPressed();
+                }
+                do Print.clearStatus();
+                let num = Keyboard.readInt("Exponent: ");
+                let success3 = Tests.testRandRangeExp(num);
+            } else { if (pressed_key = 65) {  // a
+                let success1 = Tests.testRandom();
+                let success2 = Tests.testBool(50);
+                let success3 = Tests.testRandRangeExp(8);
+                do Print.clearStatus();
+                if (success1 & success2) {
+                    do Output.printString("Success");
+                } else {
+                    do Output.printString("Failure");
+                }
+            } else { if (pressed_key = 69) {  // e
+                let exit = true;
+            }}}}}
+
+            // Wait until key is released
+            while (~(key = 0)){
+                let key = Keyboard.keyPressed();
+                let random_seed = random_seed + 1;
+            }
+        }
+
+        // Evaluate success
+        if (success1 & success2) {
+            let testSuccess = 22222;
+        }
+        return;
+    }
+
+    function boolean testRandom() {
+        var int i, mean, x;
+        let i = 100;
+        let mean = 0;
+
+        while (i > 0) {
+            let x = Random.rand();
+            let mean = mean + (x / 100);
+            let i = (i - 1);
+        }
+
+        do Print.status("Mean of 100 random numbers: ");
+        do Output.printInt(mean);
+
+        if ((mean > 15884) & (mean < 16884)) {
+            do Output.printString(" (success)");
+            return true;
+        } else {
+            do Output.printString(" (failure)");
+            return false;
+        }
+    }
+
+    function boolean testBool(int perc) {
+        var int i, cnt;
+        var boolean x;
+        let i = 1000;
+        let cnt = 0;
+
+        while (i > 0) {
+            let x = Random.randBool(perc);
+            if (x) {
+                let cnt = cnt + 1;
+            }
+            let i = (i - 1);
+        }
+
+        do Print.status("Number of `true`s in 1000 random booleans: ");
+        do Output.printInt(cnt);
+
+        if ((cnt > (perc * 10 - 10)) & (cnt < (perc * 10 + 10))) {
+            do Output.printString(" (success)");
+            return true;
+        } else {
+            do Output.printString(" (failure)");
+            return false;
+        }
+    }
+
+    function boolean testRandRangeExp(int exp) {
+        var int i, ref, x, ref_exp;
+        var boolean success;
+
+        let i = 1;
+        let success = true;
+        let ref_exp = exp;
+
+        let ref = 1;
+        while (ref_exp > 0) {
+            let ref = (ref + ref);
+            let ref_exp = ref_exp - 1;
+        }
+        let ref = ref - 1;
+
+        while ((i > 0) & success) {
+            let x = Random.randRangeExp(exp);
+            if (x > ref) {
+                let success = false;
+            }
+            let i = (i - 1);
+        }
+
+        if (success) {
+            do Print.status("Last value: ");
+            do Output.printInt(x);
+            do Output.printString(" All values are <= max. value (");
+            do Output.printInt(ref);
+            do Output.printString(") (success)");
+            return success;
+        } else {
+            do Print.status("Calculated ");
+            do Output.printInt(x);
+            do Output.printString(" is > max. value (");
+            do Output.printInt(ref);
+            do Output.printString(") (failure)");
+            return success;
+        }
+    }
+}

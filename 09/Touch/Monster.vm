@@ -1,0 +1,413 @@
+function Monster.new 0
+push constant 4
+call Memory.alloc 1
+pop pointer 0
+push argument 0
+pop this 0
+push argument 1
+pop this 1
+push argument 0
+push argument 1
+push constant 4
+push constant 4
+call BoundingBox.new 4
+pop this 2
+push constant 4
+pop this 3
+push pointer 0
+return
+function Monster.dispose 0
+push argument 0
+pop pointer 0
+push this 2
+call BoundingBox.dispose 1
+pop temp 0
+push pointer 0
+call Memory.deAlloc 1
+pop temp 0
+push constant 0
+return
+function Monster.getBBox 0
+push argument 0
+pop pointer 0
+push this 2
+return
+function Monster.move 5
+push argument 0
+pop pointer 0
+push pointer 0
+push constant 0
+call Monster.draw 2
+pop temp 0
+push this 0
+push argument 1
+sub
+pop local 0
+push this 1
+push argument 2
+sub
+pop local 1
+push local 0
+push constant 0
+lt
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push local 0
+neg
+pop local 2
+goto IF_END0
+label IF_FALSE0
+push local 0
+pop local 2
+label IF_END0
+push local 1
+push constant 0
+lt
+if-goto IF_TRUE1
+goto IF_FALSE1
+label IF_TRUE1
+push local 1
+neg
+pop local 3
+goto IF_END1
+label IF_FALSE1
+push local 1
+pop local 3
+label IF_END1
+push local 2
+push local 3
+gt
+if-goto IF_TRUE2
+goto IF_FALSE2
+label IF_TRUE2
+push constant 0
+pop local 4
+goto IF_END2
+label IF_FALSE2
+push local 2
+push local 3
+lt
+if-goto IF_TRUE3
+goto IF_FALSE3
+label IF_TRUE3
+push constant 0
+not
+pop local 4
+goto IF_END3
+label IF_FALSE3
+push constant 50
+call Random.randBool 1
+pop local 4
+label IF_END3
+label IF_END2
+push local 4
+if-goto IF_TRUE4
+goto IF_FALSE4
+label IF_TRUE4
+push local 1
+push constant 0
+lt
+if-goto IF_TRUE5
+goto IF_FALSE5
+label IF_TRUE5
+push pointer 0
+call Monster._moveDown 1
+pop temp 0
+goto IF_END5
+label IF_FALSE5
+push pointer 0
+call Monster._moveUp 1
+pop temp 0
+label IF_END5
+goto IF_END4
+label IF_FALSE4
+push local 0
+push constant 0
+lt
+if-goto IF_TRUE6
+goto IF_FALSE6
+label IF_TRUE6
+push pointer 0
+call Monster._moveRight 1
+pop temp 0
+goto IF_END6
+label IF_FALSE6
+push pointer 0
+call Monster._moveLeft 1
+pop temp 0
+label IF_END6
+label IF_END4
+push pointer 0
+push constant 0
+not
+call Monster.draw 2
+pop temp 0
+push constant 0
+return
+function Monster.draw 0
+push argument 0
+pop pointer 0
+push argument 1
+call Screen.setColor 1
+pop temp 0
+push this 0
+push constant 1
+add
+push this 1
+push constant 2
+sub
+push this 0
+push constant 2
+add
+push this 1
+push constant 2
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 1
+sub
+push this 1
+push constant 2
+sub
+push this 0
+push constant 2
+sub
+push this 1
+push constant 2
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 2
+add
+push this 1
+push constant 3
+sub
+push this 0
+push constant 3
+add
+push this 1
+push constant 3
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 2
+sub
+push this 1
+push constant 3
+sub
+push this 0
+push constant 3
+sub
+push this 1
+push constant 3
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 4
+sub
+push this 1
+push constant 1
+sub
+push this 0
+push constant 4
+add
+push this 1
+push constant 1
+sub
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 4
+sub
+push this 1
+push constant 1
+add
+push this 0
+push constant 4
+add
+push this 1
+push constant 1
+add
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 1
+sub
+push this 1
+push this 0
+push constant 1
+add
+push this 1
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 3
+add
+push this 1
+call Screen.drawPixel 2
+pop temp 0
+push this 0
+push constant 3
+sub
+push this 1
+call Screen.drawPixel 2
+pop temp 0
+push this 0
+push constant 3
+sub
+push this 1
+push constant 3
+add
+push this 0
+push constant 3
+add
+push this 1
+push constant 4
+add
+call Screen.drawRectangle 4
+pop temp 0
+push this 0
+push constant 2
+sub
+push this 1
+push constant 2
+add
+push this 0
+push constant 3
+sub
+push this 1
+push constant 2
+add
+call Screen.drawLine 4
+pop temp 0
+push this 0
+push constant 2
+add
+push this 1
+push constant 2
+add
+push this 0
+push constant 3
+add
+push this 1
+push constant 2
+add
+call Screen.drawLine 4
+pop temp 0
+push constant 0
+return
+function Monster._moveUp 1
+push argument 0
+pop pointer 0
+push this 1
+push this 3
+sub
+pop local 0
+push this 2
+push this 0
+push local 0
+push constant 1
+call BoundingBox.screenCollision 4
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push this 0
+push local 0
+call Monster._updatePos 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Monster._moveDown 1
+push argument 0
+pop pointer 0
+push this 1
+push this 3
+add
+pop local 0
+push this 2
+push this 0
+push local 0
+push constant 2
+call BoundingBox.screenCollision 4
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push this 0
+push local 0
+call Monster._updatePos 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Monster._moveLeft 1
+push argument 0
+pop pointer 0
+push this 0
+push this 3
+sub
+pop local 0
+push this 2
+push local 0
+push this 1
+push constant 3
+call BoundingBox.screenCollision 4
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push local 0
+push this 1
+call Monster._updatePos 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Monster._moveRight 1
+push argument 0
+pop pointer 0
+push this 0
+push this 3
+add
+pop local 0
+push this 2
+push local 0
+push this 1
+push constant 4
+call BoundingBox.screenCollision 4
+not
+if-goto IF_TRUE0
+goto IF_FALSE0
+label IF_TRUE0
+push pointer 0
+push local 0
+push this 1
+call Monster._updatePos 3
+pop temp 0
+label IF_FALSE0
+push constant 0
+return
+function Monster._updatePos 0
+push argument 0
+pop pointer 0
+push argument 1
+pop this 0
+push argument 2
+pop this 1
+push this 2
+push this 0
+push this 1
+call BoundingBox.updatePos 3
+pop temp 0
+push constant 0
+return

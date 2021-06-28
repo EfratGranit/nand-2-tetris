@@ -1,0 +1,85 @@
+class BoundingBox {
+    field int x, y;
+    field int dx, dy;
+
+    /** New BoundingBox at given coordinates */
+    constructor BoundingBox new(int posX, int posY, int reachX, int reachY) {
+        let x = posX;
+        let y = posY;
+        let dx = reachX;
+        let dy = reachY;
+        return this;
+    }
+
+    /** Accessors */
+    method int getX() { return x; }
+    method int getY() { return y; }
+    method int getdX() { return dx; }
+    method int getdY() { return dy; }
+
+    /** Destroy BoundingBox and deallocate memory */
+    method void dispose() {
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Update position */
+    method void updatePos(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        return;
+    }
+
+    /** Predict collision with screen edge
+     *
+     *  Returns true if bounding box touches the edge of the screen in a
+     *  specified direction.
+     */
+    method boolean screenCollision(int predX, int predY, int direction) {
+        if (direction = 1) {  // up
+            if ((predY - dy) > -1) {
+                return false;
+            }
+        }
+        if (direction = 2) {  // down
+            if ((predY + dy) < 256) {
+                return false;
+            }
+        }
+        if (direction = 3) {  // left
+            if ((predX - dx) > -1) {
+                return false;
+            }
+        }
+        if (direction = 4) {  // right
+            if ((predX + dx) < 512) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Detect whether this bounding box touches (or overlaps with) another
+     *  b. box.
+     */
+    method boolean touches(BoundingBox other) {
+        var int diff_x, diff_y;
+
+        let diff_x = x - other.getX();
+        let diff_y = y - other.getY();
+        if (diff_x < 0) {
+            let diff_x = - diff_x;
+        }
+        if (diff_y < 0) {
+            let diff_y = - diff_y;
+        }
+
+        if ((diff_x - dx - other.getdX() - 1 < 1) &  // without -1, it detects
+            (diff_y - dy - other.getdY() - 1 < 1)) { // only overlaps
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+}

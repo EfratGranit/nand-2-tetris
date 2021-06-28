@@ -1,0 +1,22 @@
+// Simple chasing game
+
+class Main {
+    function void main() {
+        var Game game;
+        var int x, y;
+
+        // Create game
+        let game = Game.new();
+
+        // Run game
+        do game.run();
+
+        // Exit after game is finished
+        do Screen.clearScreen();
+        do Output.moveCursor(0, 0);
+        do Output.printString("Exiting");
+        do game.dispose();
+
+        return;
+    }
+}

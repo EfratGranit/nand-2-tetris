@@ -1,0 +1,46 @@
+function Random.setSeed 0
+push argument 0
+pop static 0
+push constant 0
+return
+function Random.rand 0
+push static 0
+push constant 20251
+sub
+push constant 32767
+and
+pop static 0
+push static 0
+return
+function Random.randBool 0
+call Random.rand 0
+push constant 328
+push argument 0
+call Math.multiply 2
+lt
+return
+function Random.randRangeExp 1
+push constant 1
+pop local 0
+label WHILE_EXP0
+push argument 0
+push constant 1
+gt
+not
+if-goto WHILE_END0
+push local 0
+push local 0
+add
+push constant 1
+add
+pop local 0
+push argument 0
+push constant 1
+sub
+pop argument 0
+goto WHILE_EXP0
+label WHILE_END0
+call Random.rand 0
+push local 0
+and
+return

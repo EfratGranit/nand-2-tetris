@@ -1,0 +1,114 @@
+class Player {
+    field int x, y;
+    field BoundingBox bBox;
+    field int speed;         // How many pixels to move per step
+
+    /** New Player at given coordinates */
+    constructor Player new(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        let bBox = BoundingBox.new(posX, posY, 3, 5);
+        let speed = 5;
+        return this;
+    }
+
+    /** Destroy Player and deallocate memory */
+    method void dispose() {
+        do bBox.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Accessors */
+    method int getX() { return x; }
+    method int getY() { return y; }
+
+    /** Move to a desired direction
+     *
+     *  Directions: 1 - up, 2 - down, 3 - left, 4 - right, 0 - stay
+     */
+    method void move(int direction) {
+        do draw(false);
+
+        if (direction = 1) {
+            do _moveUp();
+        } else { if (direction = 2) {
+            do _moveDown();
+        } else { if (direction = 3) {
+            do _moveLeft();
+        } else { if (direction = 4) {
+            do _moveRight();
+        }}}}
+
+        do draw(true);
+        return;
+    }
+
+    /** Draw the Player's figure (false color will clear it) */
+    method void draw(boolean color) {
+//Upper part of face
+        do Screen.setColor(color);
+        do Screen.drawLine(x-2, y-4, x+2, y-4);
+        do Screen.drawLine(x-3, y-3, x+3, y-3);
+        do Screen.drawLine(x-4, y-2, x+4, y-2);
+        do Screen.drawLine(x-1, y-1, x+1, y-1);
+        do Screen.drawRectangle(x-4, y-1, x-3, y+2);
+        do Screen.drawRectangle(x+3, y-1, x+4, y+2);
+        do Screen.drawRectangle(x-2, y, x-1, y+1);
+        do Screen.drawRectangle(x+1, y, x+2, y+1);
+        do Screen.drawPixel(x, y+1);
+        //Mouth and Smile
+        do Screen.drawLine(x-3, y+3, x-2, y+3);
+        do Screen.drawLine(x+2, y+3, x+3, y+3);
+        do Screen.drawLine(x-2, y+4, x+2, y+4);
+        return;
+    }
+
+    /** Detect contact with another monster */
+    method boolean touchesMonster(Monster monster) {
+        return bBox.touches(monster.getBBox());
+    }
+
+    method void _moveUp() {
+        var int predY;
+        let predY = (y - speed);
+        if (~bBox.screenCollision(x, predY, 1)) {
+            do _updatePos(x, predY);
+        }
+        return;
+    }
+
+    method void _moveDown() {
+        var int predY;
+        let predY = (y + speed);
+        if (~bBox.screenCollision(x, predY, 2)) {
+            do _updatePos(x, predY);
+        }
+        return;
+    }
+
+    method void _moveLeft() {
+        var int predX;
+        let predX = (x - speed);
+        if (~bBox.screenCollision(predX, y, 3)) {
+            do _updatePos(predX, y);
+        }
+        return;
+    }
+
+    method void _moveRight() {
+        var int predX;
+        let predX = (x + speed);
+        if (~bBox.screenCollision(predX, y, 4)) {
+            do _updatePos(predX, y);
+        }
+        return;
+    }
+
+    method void _updatePos(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        do bBox.updatePos(x, y);
+        return;
+    }
+}

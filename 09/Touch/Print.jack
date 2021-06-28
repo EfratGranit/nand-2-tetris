@@ -1,0 +1,16 @@
+class Print {
+    /** Print a message to the status line (last row) */
+    function void status(String msg) {
+        do Print.clearStatus();
+        do Output.printString(msg);
+        return;
+    }
+
+    /** Clear status line and return cursor to the beginning of the line */
+    function void clearStatus() {
+        do Output.moveCursor(22, 0);
+        do Output.printString("                                                                ");
+        do Output.moveCursor(22, 0);
+        return;
+    }
+}

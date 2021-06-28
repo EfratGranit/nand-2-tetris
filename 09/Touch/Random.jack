@@ -1,0 +1,38 @@
+class Random {
+    static int randomSeed;
+
+    function void setSeed(int seedVal) {
+        let randomSeed = seedVal;
+        return;
+    }
+
+    /** Generate a random value in a range 0..32767 */
+    function int rand() {
+        let randomSeed = (randomSeed - 20251) & 32767;
+        return randomSeed;
+    }
+
+    /** Return true with a chance of a specified percentage
+     *
+     * Works for 0..99
+     */
+    function boolean randBool(int perc) {
+        return (Random.rand() < (328 * perc));  // 327.67 is 1%
+    }
+
+    /** Return a random number in a range 0..(2^exp - 1).
+     *
+     * Works for exponents 1..15.
+     */
+    function int randRangeExp(int exp) {
+        var int mask;
+
+        let mask = 1;
+        while (exp > 1) {
+            let mask = (mask + mask) + 1;
+            let exp = exp - 1;
+        }
+        return (Random.rand() & mask);
+    }
+
+}

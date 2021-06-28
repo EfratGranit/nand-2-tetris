@@ -1,0 +1,136 @@
+class Monster {
+    field int x, y;
+    field BoundingBox bBox;
+    field int speed;         // How many pixels to move per step
+
+    /** New Monster at given coordinates */
+    constructor Monster new(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        let bBox = BoundingBox.new(posX, posY, 4, 4);
+        let speed = 4;
+        return this;
+    }
+
+    /** Destroy Monster and deallocate memory */
+    method void dispose() {
+        do bBox.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Accessors */
+    method int getBBox() { return bBox; }
+
+    /** Move towards a specified point */
+    method void move(int destX, int destY) {
+        var int dx, dy, abs_dx, abs_dy;
+        var boolean verticalMovement;
+
+        do draw(false);
+
+        let dx = x - destX;
+        let dy = y - destY;
+
+        if (dx < 0) {
+            let abs_dx = -dx;
+        } else {
+            let abs_dx = dx;
+        }
+
+        if (dy < 0) {
+            let abs_dy = -dy;
+        } else {
+            let abs_dy = dy;
+        }
+
+        if (abs_dx > abs_dy) {          // Move horizontally
+            let verticalMovement = false;
+        } else { if (abs_dx < abs_dy){  // Move vertically
+            let verticalMovement = true;
+        } else {                        // Randomly choose
+            let verticalMovement = Random.randBool(50);
+        }}
+
+        if (verticalMovement) {
+            if (dy < 0) {  // Move down
+                do _moveDown();
+            } else {       // Move up
+                do _moveUp();
+            }
+        } else {
+            if (dx < 0) {  // Move right
+                do _moveRight();
+            } else {       // Move left
+                do _moveLeft();
+            }
+        }
+
+        do draw(true);
+        return;
+    }
+
+    /** Draw the Monster's figure (false color will clear it) */
+    method void draw(boolean color) {
+        do Screen.setColor(color);
+        // Horns
+        do Screen.drawLine(x+1, y-2, x+2, y-2);
+        do Screen.drawLine(x-1, y-2, x-2, y-2);
+        do Screen.drawLine(x+2, y-3, x+3, y-3);
+        do Screen.drawLine(x-2, y-3, x-3, y-3);
+        // Nose and mid of face
+        do Screen.drawLine(x-4, y-1, x+4, y-1);
+        do Screen.drawLine(x-4, y+1, x+4, y+1);
+        do Screen.drawLine(x-1, y, x+1, y);
+        do Screen.drawPixel(x+3, y);
+        do Screen.drawPixel(x-3, y);
+        // Mouth
+        do Screen.drawRectangle(x-3, y+3, x+3, y+4);
+        do Screen.drawLine(x-2, y+2, x-3, y+2);
+        do Screen.drawLine(x+2, y+2, x+3, y+2);
+        return;
+    }
+
+    method void _moveUp() {
+        var int predY;
+        let predY = (y - speed);
+        if (~bBox.screenCollision(x, predY, 1)) {
+            do _updatePos(x, predY);
+        }
+        return;
+    }
+
+    method void _moveDown() {
+        var int predY;
+        let predY = (y + speed);
+        if (~bBox.screenCollision(x, predY, 2)) {
+            do _updatePos(x, predY);
+        }
+        return;
+    }
+
+    method void _moveLeft() {
+        var int predX;
+        let predX = (x - speed);
+        if (~bBox.screenCollision(predX, y, 3)) {
+            do _updatePos(predX, y);
+        }
+        return;
+    }
+
+    method void _moveRight() {
+        var int predX;
+        let predX = (x + speed);
+        if (~bBox.screenCollision(predX, y, 4)) {
+            do _updatePos(predX, y);
+        }
+        return;
+    }
+
+    method void _updatePos(int posX, int posY) {
+        let x = posX;
+        let y = posY;
+        do bBox.updatePos(x, y);
+        return;
+    }
+}

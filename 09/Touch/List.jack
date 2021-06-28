@@ -1,0 +1,39 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/09/List/List.jack
+
+/** Represents a linked list of objects. */
+class List {
+    field Array data;        // a list consists of a data field,
+    field List next;         // followed by a list
+
+    /** Creates a List with a starting item and a tail (tail should be null) */
+    constructor List new(Array item, Array tail) {
+        let data = item;
+        let next = tail;
+        return this;
+    }
+
+    /** Accessors. */
+    method Array getData() { return data; }
+    method Array getNext() { return next; }
+
+    /** Disposes this List by recursively disposing its tail. */
+    method void dispose() {
+        if (~(next = null)) {
+            do next.dispose();
+        }
+        do data.dispose();
+        // Uses an OS routine to recycle this object.
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Push item to list. */
+    method void push(Array item) {
+        let next = List.new(data, next);
+        let data = item;
+        return;
+    }
+}

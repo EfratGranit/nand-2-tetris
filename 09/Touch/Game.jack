@@ -1,0 +1,123 @@
+class Game {
+    field int activeMode;  // Current mode of the game (0 - menu, 1 - map, 2 - exit)
+    field Map map;         // Saved map with all positions of objects
+    field Menu menu;       // Menu with saved settings
+
+    /** Create a new instance of Game */
+    constructor Game new() {
+        let map = null;
+        let menu = Menu.new();
+        let activeMode = 0;
+        return this;
+    }
+
+    /** Destroy Game and deallocate memory */
+    method void dispose() {
+        if (~(map = null)) {
+            do map.dispose();
+        }
+        do menu.dispose();
+        do Memory.deAlloc(this);
+        return;
+    }
+
+    /** Show menu and run a loop waiting for keys */
+    method void run() {
+        var int key, key_first, key_press_cnt, key_press_thresh;
+        var int response;
+        var int random_seed;
+        let response = 0;
+        let key_press_cnt = 0;
+        let key_press_thresh = 7500;
+        let random_seed = 123;
+
+        // Init tests result
+        do Tests.init();
+
+        // Show menu
+        do menu.show(_canResume());
+
+        while (~(activeMode = 2)) {
+            // Wait until key is pressed
+            while (key = 0){
+                let key = Keyboard.keyPressed();
+                let key_first = key;
+                let random_seed = random_seed + 1;
+            }
+
+            // Set random seed
+            do Random.setSeed(random_seed);
+
+            // Handle pressed key
+            if (activeMode = 0) {
+                let response = menu.pressedKey(key);
+            } else { if (activeMode = 1) {
+                let response = map.pressedKey(key);
+            }}
+            do _handleResponse(response);
+
+            // Wait until key is released
+            while (~(key = 0)){
+                let key = Keyboard.keyPressed();
+                let random_seed = random_seed + 1;
+                // When holding the same key longer, go to next iteration
+                if (key = key_first) {
+                    let key_press_cnt = key_press_cnt + 1;
+                }
+                if (key_press_cnt > key_press_thresh) {
+                    let key_press_cnt = 0;
+                    let key = 0;
+                }
+            }
+        }
+
+        return;
+    }
+
+    /** Do stuff based on Map's or Menu's response */
+    method void _handleResponse(int response) {
+        if (response < 0) {
+            do Sys.error(response);
+        }
+
+        // Menu mode
+        if (activeMode = 0) {
+            if (response = 1) {            // New game
+                let map = Map.new();
+                do map.show();
+                let activeMode = 1;
+            } else { if (response = 2) {   // Resume game
+                if (~(map = null)) {
+                    do map.show();
+                    let activeMode = 1;
+                }
+            } else { if (response = 99) {  // Exit game
+                let activeMode = 2;
+            } else { if (response = 42) {  // Run tests
+                do Tests.run();
+                do menu.show(_canResume());
+            }}}}
+        // Map mode
+        } else { if (activeMode = 1) {
+            if (response = 99) {           // Go to menu
+                do menu.show(_canResume());
+                let activeMode = 0;
+            } else { if (response = 98) {  // Game over and go to menu
+                do map.dispose();
+                let map = null;
+                do menu.show(_canResume());
+                let activeMode = 0;
+            }}
+        }}
+        return;
+    }
+
+    /** Returns whether there is a running map which you can resume */
+    method boolean _canResume() {
+        if (map = null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+}
