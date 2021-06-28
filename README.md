@@ -26,7 +26,7 @@ Project 03: Sequential Logic
 Project 04: Machine Language
 Project 05: Computer Architecture
 Project 06: Assembler
-## Part II: The software
+### Part II: The software 
 Second part starts with the virtual machine design, implements a high level object oriented language called Jack, and ends with compiler and the operating system. The repository contains software solutions to the following projects.
 
 Project 07: Virtual Machine, Stack Arithmetic
