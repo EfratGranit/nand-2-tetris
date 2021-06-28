@@ -1,0 +1,53 @@
+// This file is part of www.nand2tetris.org
+// and the book "The Elements of Computing Systems"
+// by Nisan and Schocken, MIT Press.
+// File name: projects/02/ALU.hdl
+
+
+
+// Implementation: the ALU manipulates the x and y
+// inputs and then operates on the resulting values, 
+// as follows:
+// if (zx  == 1) sets x = 0        // 16-bit constant
+// if (nx  == 1) sets x = ~x       // bitwise "not"
+// if (zy  == 1) sets y = 0        // 16-bit constant
+// if (ny  == 1) sets y = ~y       // bitwise "not"
+// if (f   == 1) sets out = x + y  // integer 2's-complement addition
+// if (f   == 0) sets out = x & y  // bitwise And
+// if (no  == 1) sets out = ~out   // bitwise Not
+// if (out == 0) sets zr = 1
+// if (out < 0)  sets ng = 1
+
+  
+CHIP ALU {
+    IN  
+        x[16], y[16],  // 16-bit inputs        
+        zx, // zero the x input?
+        nx, // negate the x input?
+        zy, // zero the y input?
+        ny, // negate the y input?
+        f,  // compute  out = x + y (if f == 1) or out = x & y (if == 0)
+        no; // negate the out output?
+
+    OUT 
+        out[16], // 16-bit output
+        zr, // 1 if (out == 0), 0 otherwise
+        ng; // 1 if (out < 0),  0 otherwise
+
+    PARTS:
+    Mux16(a=x, b=false, sel=zx, out=x1);
+    Not16(in=x1, out=Notx);
+    Mux16(a=x1, b=Notx, sel=nx, out=x2);
+    Mux16(a=y, b=false, sel=zy, out=y1);
+    Not16(in=y1, out=Noty);
+    Mux16(a=y1, b=Noty, sel=ny, out=y2);
+    Add16(a=x2, b=y2, out=Addxy);
+    And16(a=x2, b=y2, out=Andxy);
+    Mux16(a=Andxy, b=Addxy, sel=f, out=Positionf);
+    Not16(in=Positionf, out=Notf);
+    Mux16(a=Positionf, b=Notf, sel=no, out=out, out[0..7]=outRight, out[8..15]=outLeft, out[15]=ng);
+    Or8Way(in=outRight, out=right);
+    Or8Way(in=outLeft,  out=leftOr);
+    Or(a=right, b=leftOr, out=Notzr);
+    Not(in=Notzr, out=zr);
+}
