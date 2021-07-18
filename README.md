@@ -20,18 +20,18 @@ This repository contains my Nand to Tetris project solutions. The course is comp
 ### Part I: The hardware
 First part is dedicated to the design and implementation of a computer hardware named Hack. The repository contains hardware solutions to the following projects.
 
-Project 01: Boolean Logic
-Project 02: Boolean Arithmetic
-Project 03: Sequential Logic
-Project 04: Machine Language
-Project 05: Computer Architecture
-Project 06: Assembler
+</br>Project 01: Boolean Logic
+</br>Project 02: Boolean Arithmetic
+</br>Project 03: Sequential Logic
+</br>Project 04: Machine Language
+</br>Project 05: Computer Architecture
+</br>Project 06: Assembler
 ### Part II: The software 
 Second part starts with the virtual machine design, implements a high level object oriented language called Jack, and ends with compiler and the operating system. The repository contains software solutions to the following projects.
 
-Project 07: Virtual Machine, Stack Arithmetic
-Project 08: Virtual Machine, Program Control
-Project 09: High-Level Language
+</br>Project 07: Virtual Machine, Stack Arithmetic
+</br>Project 08: Virtual Machine, Program Control
+</br>Project 09: High-Level Language
 ## References
 The course is based upon The Elements of Computing Systems by Noam Nisan and Shimon Schocken. Also the official course website contains all the project materials and software tools needed.
 
