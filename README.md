@@ -32,9 +32,6 @@ Second part starts with the virtual machine design, implements a high level obje
 Project 07: Virtual Machine, Stack Arithmetic
 Project 08: Virtual Machine, Program Control
 Project 09: High-Level Language
-Project 10: Compiler, Syntax Analysis
-Project 11: Compiler, Code Generation
-Project 12: Operating System
 ## References
 The course is based upon The Elements of Computing Systems by Noam Nisan and Shimon Schocken. Also the official course website contains all the project materials and software tools needed.
 
