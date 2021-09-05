@@ -1,5 +1,5 @@
 # nand-2-tetris
-Project solutions for the Nand to Tetris course.
+Project solutions for the Nand to Tetris course by Shimon Schocken and Noam Nisan. (https://www.nand2tetris.org/)
 
 ## Course
 The best way to understand how a computer works is to built one from scratch. And that is exactly what Nand to Tetris course does. The course leads students through 12 projects that gradually build a basic hardware platform and a modern software hierarchy. Throughout the processes students gain invaluable hands-on knowledge in the following areas:
